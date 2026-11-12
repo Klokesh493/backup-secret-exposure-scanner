@@ -1,32 +1,12 @@
 # Backup Secret Exposure Scanner
 
-Scans backup logs for leaked tokens, keys, and connection strings before ticket sharing.
-
-Focus: Backup-platform DevSecOps security.
-
-Built as a small, runnable Python project with clear input, output, sample data, and tests.
-
-## Run
-
-```bash
-python3 secret_scanner.py sample_backup.log
-```
-
-## Verify
-
-```bash
-python3 -m unittest discover . -v
-```
-
-## Local verification
-
-Run `make verify` with Make and Python 3 installed. The target runs the documented sample through the project CLI. It also runs the existing Python unit tests.
-
-## Business problem
-
 Backup logs may contain credential-like text. A reviewer needs category counts to decide whether to redact the export before sharing it.
 
-## Project walkthrough
+## What I built
+
+I built a defensive log-review CLI that counts supported credential-like patterns by category. The report contains category names and counts so reviewers can decide whether a backup log needs redaction without copying the matching values into a ticket.
+
+## How it works
 
 ```mermaid
 flowchart LR
@@ -40,41 +20,39 @@ flowchart LR
     C -->|No| E
 ```
 
-[Architecture and data flow](docs/ARCHITECTURE.md) · [Business problem, demo, and verification](docs/CASE_STUDY.md)
+[Architecture](docs/ARCHITECTURE.md) · [Decision rules and source](docs/RULES.md)
+
+## Tools used
+
+| Tool | Role in this repository |
+| --- | --- |
+| Python | [secret_scanner.py](secret_scanner.py) implements the CLI and decision rules. Uses `re` to match text patterns. |
+| Make | Runs the documented example and the local `unittest` suite. |
+| Python replay runner | Compares actual stdout with the checked-in baseline fixtures. |
+| Ruff and Bandit | Developer lint and static security checks through `make check`. |
 
 ## Run the project
 
-### Local setup
-
-Run `make verify` with Python 3 and Make installed.
-
-### CLI usage
+Use Python 3.10+ and Make. From the repository root:
 
 ```sh
 python3 secret_scanner.py sample_backup.log
 ```
 
-### Replay usage
+The synthetic fixture reports one token-like match and one password-like match. [Full expected output](examples/Demo%201.stdout.txt)
 
-Run `make replay` to replay the checked-in inputs. The runner compares stdout with the baseline, reports differences, and exits nonzero on regression.
+## Verify the project
 
-[Replay cases](examples/replay-manifest.json) · [Generated report](reports/replay.md) · [Rule implementation](docs/RULES.md)
+```sh
+make verify
+make replay
+```
 
-### Run tests
+`make replay` checks the recorded cases and exits nonzero if the output changes.
+See the [developer guide](docs/DEVELOPMENT.md) for the pinned lint and security tools.
 
-[Verification report](reports/verification.md) · [Business problem, sample behavior, and limitations](docs/CASE_STUDY.md)
+## Operating limits
 
+Pattern coverage is limited. The utility neither rewrites logs nor establishes that an export is safe to share.
 
-### Limitations
-
-The verification report covers the bundled local examples. See the [case study](docs/CASE_STUDY.md) for project-specific assumptions and operating limits.
-
-## Development and security
-
-See the [developer setup, tool roles, and security checks](docs/DEVELOPMENT.md).
-
-[Local check results](reports/devsecops.md)
-
-## Runbook
-
-[Run, verify, and troubleshoot this project](docs/RUNBOOK.md)
+[Case study](docs/CASE_STUDY.md) · [Operator runbook](docs/RUNBOOK.md) · [Verification report](reports/verification.md)
