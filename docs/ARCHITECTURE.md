@@ -4,11 +4,14 @@ Scans backup logs for leaked tokens, keys, and connection strings before ticket 
 
 ```mermaid
 flowchart LR
-    N0["sample_backup.log"]
-    N1["secret_scanner.py"]
-    N2["scan"]
-    N3["Result for operator review"]
-    N0 --> N1 --> N2 --> N3
+    A["Backup log file"]
+    B["Count matches by token, password, and key pattern"]
+    C{"Matching pattern present?"}
+    D["Emit finding category and count"]
+    E["Omit categories with zero matches"]
+    A --> B --> C
+    C -->|Yes| D
+    C -->|No| E
 ```
 
 ## Operational boundaries
