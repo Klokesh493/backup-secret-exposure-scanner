@@ -2,7 +2,7 @@
 
 ## Business problem
 
-Scans backup logs for leaked tokens, keys, and connection strings before ticket sharing.
+Backup logs may contain credential-like text. A reviewer needs category counts to decide whether to redact the export before sharing it.
 
 ## Reproduce the workflow
 

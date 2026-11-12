@@ -22,6 +22,10 @@ python3 -m unittest discover . -v
 
 Run `make verify` with Make and Python 3 installed. The target runs the documented sample through the project CLI. It also runs the existing Python unit tests.
 
+## Business problem
+
+Backup logs may contain credential-like text. A reviewer needs category counts to decide whether to redact the export before sharing it.
+
 ## Project walkthrough
 
 ```mermaid
