@@ -2,6 +2,8 @@
 
 Backup logs may contain credential-like text. A reviewer needs category counts to decide whether to redact the export before sharing it.
 
+[Skills and verification](docs/ENGINEERING_NOTES.md)
+
 ## What I built
 
 I built a defensive log-review CLI that counts supported credential-like patterns by category. The report contains category names and counts so reviewers can decide whether a backup log needs redaction without copying the matching values into a ticket.
@@ -41,6 +43,12 @@ python3 secret_scanner.py sample_backup.log
 
 The synthetic fixture reports one token-like match and one password-like match. [Full expected output](examples/Demo%201.stdout.txt)
 
+To emit a redacted copy of the checked-in sample:
+
+```sh
+python3 secret_scanner.py sample_backup.log --redact
+```
+
 ## Verify the project
 
 ```sh
@@ -53,6 +61,6 @@ See the [developer guide](docs/DEVELOPMENT.md) for the pinned lint and security 
 
 ## Operating limits
 
-Pattern coverage is limited. The utility neither rewrites logs nor establishes that an export is safe to share.
+Pattern coverage is limited. The scanner emits a redacted copy on stdout. Review the output before sharing.
 
 [Case study](docs/CASE_STUDY.md) · [Operator runbook](docs/RUNBOOK.md) · [Verification report](reports/verification.md)
